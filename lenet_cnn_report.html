@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super-Charged LeNet CNN - Deep Learning Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #090d16 0%, #111827 100%);
+            font-family: 'Outfit', sans-serif;
+            color: #f1f5f9;
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body class="p-6 md:p-12">
+    <header class="max-w-7xl mx-auto mb-10 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-6 pb-8 border-b border-gray-800/80">
+        <div>
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-sm font-semibold mb-3">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                Extremely Powerful LeNet Active
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+                Super-Charged LeNet <span class="bg-gradient-to-r from-emerald-400 via-teal-400 to-indigo-500 bg-clip-text text-transparent">CNN Dashboard</span>
+            </h1>
+            <p class="mt-2 text-slate-400 text-base md:text-lg max-w-2xl font-light">
+                Comprehensive training stats, learning curves, and full multi-class evaluations for your Bengali character dataset.
+            </p>
+        </div>
+        <div class="flex gap-4">
+            <div class="glass-panel px-6 py-4 rounded-2xl flex flex-col items-center">
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Final Accuracy</span>
+                <span class="text-3xl font-extrabold text-emerald-400 mt-1">95.60%</span>
+            </div>
+            <div class="glass-panel px-6 py-4 rounded-2xl flex flex-col items-center">
+                <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">F1-Score</span>
+                <span class="text-3xl font-extrabold text-teal-400 mt-1">0.9562</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto space-y-10">
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="glass-panel p-6 rounded-2xl">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Test Loss</p>
+                <h3 class="text-2xl font-extrabold text-red-400 mt-2">0.1544</h3>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Weighted Precision</p>
+                <h3 class="text-2xl font-extrabold text-sky-400 mt-2">0.9570</h3>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Weighted Recall</p>
+                <h3 class="text-2xl font-extrabold text-purple-400 mt-2">0.9560</h3>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl">
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Parameters</p>
+                <h3 class="text-2xl font-extrabold text-amber-400 mt-2">~358,000</h3>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="text-lg font-bold text-slate-200 mb-4">📈 Loss Progression</h3>
+                <div class="relative w-full h-[350px]">
+                    <canvas id="lossChart"></canvas>
+                </div>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl">
+                <h3 class="text-lg font-bold text-slate-200 mb-4">🎯 Accuracy Progression</h3>
+                <div class="relative w-full h-[350px]">
+                    <canvas id="accuracyChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="glass-panel p-6 rounded-2xl lg:col-span-5 flex flex-col">
+                <h3 class="text-lg font-bold text-slate-200 mb-4">📄 Multi-Class Evaluation Report</h3>
+                <pre class="bg-gray-950/80 border border-gray-800 rounded-xl p-5 overflow-auto font-mono text-sm text-emerald-400 shadow-inner flex-grow h-[400px]">              precision    recall  f1-score   support<br><br>         172       0.95      1.00      0.98        60<br>         173       1.00      0.95      0.97        60<br>         174       1.00      0.95      0.97        60<br>         175       1.00      1.00      1.00        60<br>         176       0.82      0.92      0.87        60<br>         177       0.93      0.88      0.91        60<br>         178       0.95      0.95      0.95        60<br>         179       0.97      0.97      0.97        60<br>         180       0.93      0.92      0.92        60<br>         181       0.98      0.95      0.97        60<br>         182       0.98      0.97      0.97        60<br>         183       0.97      0.97      0.97        60<br>         184       0.98      0.93      0.96        60<br>         185       0.97      0.97      0.97        60<br>         186       0.94      0.98      0.96        60<br>         187       0.93      0.88      0.91        60<br>         188       0.94      0.97      0.95        60<br>         189       0.97      0.97      0.97        60<br>         190       0.95      0.97      0.96        60<br>         191       0.95      0.97      0.96        60<br>         192       0.97      0.95      0.96        60<br>         193       0.90      0.95      0.93        60<br>         194       0.97      0.93      0.95        60<br>         195       0.92      0.95      0.93        60<br>         196       0.93      0.93      0.93        60<br>         197       0.90      0.93      0.92        60<br>         198       0.91      0.98      0.94        60<br>         199       0.95      0.97      0.96        60<br>         200       1.00      0.97      0.98        60<br>         201       0.95      0.95      0.95        60<br>         202       0.89      0.93      0.91        60<br>         203       0.97      0.93      0.95        60<br>         204       1.00      0.97      0.98        60<br>         205       0.95      0.98      0.97        60<br>         206       0.93      0.93      0.93        60<br>         207       0.92      0.97      0.94        60<br>         208       0.92      0.93      0.93        60<br>         209       0.98      0.97      0.97        60<br>         210       1.00      0.95      0.97        60<br>         211       1.00      0.95      0.97        60<br>         212       0.97      0.93      0.95        60<br>         213       0.96      0.92      0.94        60<br>         214       0.94      0.98      0.96        60<br>         215       1.00      1.00      1.00        60<br>         216       0.98      0.97      0.97        60<br>         217       0.98      1.00      0.99        60<br>         218       0.95      1.00      0.98        60<br>         219       1.00      0.97      0.98        60<br>         220       1.00      1.00      1.00        60<br>         221       1.00      0.95      0.97        60<br><br>    accuracy                           0.96      3000<br>   macro avg       0.96      0.96      0.96      3000<br>weighted avg       0.96      0.96      0.96      3000<br></pre>
+            </div>
+            <div class="glass-panel p-6 rounded-2xl lg:col-span-7">
+                <h3 class="text-lg font-bold text-slate-200 mb-4">🧭 Interactive Confusion Matrix Heatmap</h3>
+                <div class="bg-gray-950/40 border border-gray-800 rounded-xl p-6 h-[400px] overflow-auto flex items-center justify-center">
+                    <div id="matrixContainer" class="grid gap-1 w-full max-w-md aspect-square"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="max-w-7xl mx-auto mt-16 text-center text-slate-600 text-sm border-t border-gray-800/40 pt-8">
+        ⚡ Super-Charged LeNet CNN Engine • Built with PyTorch & Google Colab.
+    </footer>
+
+    <script>
+        const historyData = {"train_loss": [2.196585505803426, 0.961678348382314, 0.6563308591842651, 0.5117293686866761, 0.42724380270640056, 0.37528915810585023, 0.3268258226712545, 0.2809207971493403, 0.25117004334926607, 0.2384771205186844, 0.2149089906613032, 0.2011544595162074, 0.18443097585439683, 0.17524380979935328, 0.16477379604180653, 0.14950548505783082, 0.14267637620369594, 0.13488446346918742, 0.12665056232611338, 0.11777700832486153, 0.11119859951734543, 0.11741256892681122, 0.11058145956198374, 0.09829715319474538, 0.10621848611036937], "train_acc": [0.4585, 0.7443333333333333, 0.8135833333333333, 0.8536666666666667, 0.8765833333333334, 0.88575, 0.9004166666666666, 0.9136666666666666, 0.9214166666666667, 0.9258333333333333, 0.93275, 0.9354166666666667, 0.9394166666666667, 0.945, 0.9458333333333333, 0.9524166666666667, 0.954, 0.9566666666666667, 0.9596666666666667, 0.96175, 0.9646666666666667, 0.95875, 0.96375, 0.9675, 0.965], "val_loss": [0.996048133691152, 0.5538007437388103, 0.4131476221680641, 0.33859435735146204, 0.2951556063890457, 0.25385552435119946, 0.23402194053928058, 0.20998546946793795, 0.20916520521541437, 0.21681348167856535, 0.2098259265832603, 0.19419999016821385, 0.18426116761316855, 0.1840293448927502, 0.1839053683852156, 0.18665132404242954, 0.17387907177209855, 0.18109631833185752, 0.1735525076451401, 0.18301520340392988, 0.17059689311745266, 0.1810960199429343, 0.16963460812407236, 0.17423383905428153, 0.1543762878710404], "val_acc": [0.761, 0.857, 0.888, 0.909, 0.9146666666666666, 0.929, 0.9293333333333333, 0.9353333333333333, 0.94, 0.9356666666666666, 0.9346666666666666, 0.944, 0.947, 0.944, 0.9473333333333334, 0.946, 0.9473333333333334, 0.9456666666666667, 0.949, 0.9493333333333334, 0.9503333333333334, 0.9483333333333334, 0.9513333333333334, 0.9516666666666667, 0.956]};
+        const classNames = ["172", "173", "174", "175", "176", "177", "178", "179", "180", "181", "182", "183", "184", "185", "186", "187", "188", "189", "190", "191", "192", "193", "194", "195", "196", "197", "198", "199", "200", "201", "202", "203", "204", "205", "206", "207", "208", "209", "210", "211", "212", "213", "214", "215", "216", "217", "218", "219", "220", "221"];
+        const confMatrix = [[60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [3, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 55, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 5, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 0, 2, 55, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 56, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 1, 1, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 58, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 57, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 56, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 55, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 59, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 58, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 58, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 57]];
+        const epochs = Array.from({length: historyData.train_loss.length}, (_, i) => i + 1);
+
+        const lossCtx = document.getElementById('lossChart').getContext('2d');
+        new Chart(lossCtx, {
+            type: 'line',
+            data: {
+                labels: epochs,
+                datasets: [
+                    {
+                        label: 'Training Loss',
+                        data: historyData.train_loss,
+                        borderColor: '#f87171',
+                        backgroundColor: 'rgba(248, 113, 113, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Validation Loss',
+                        data: historyData.val_loss,
+                        borderColor: '#fb7185',
+                        backgroundColor: 'rgba(251, 113, 133, 0.05)',
+                        tension: 0.3,
+                        borderDash: [5, 5]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8' } },
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#f1f5f9' } }
+                }
+            }
+        });
+
+        const accCtx = document.getElementById('accuracyChart').getContext('2d');
+        new Chart(accCtx, {
+            type: 'line',
+            data: {
+                labels: epochs,
+                datasets: [
+                    {
+                        label: 'Training Accuracy (%)',
+                        data: historyData.train_acc.map(a => a * 100),
+                        borderColor: '#34d399',
+                        backgroundColor: 'rgba(52, 211, 153, 0.1)',
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: 'Validation Accuracy (%)',
+                        data: historyData.val_acc.map(a => a * 100),
+                        borderColor: '#60a5fa',
+                        backgroundColor: 'rgba(96, 165, 250, 0.05)',
+                        tension: 0.3,
+                        borderDash: [5, 5]
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { grid: { color: 'rgba(255,255,255,0.03)' }, ticks: { color: '#94a3b8' }, min: 0, max: 100 },
+                    x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
+                },
+                plugins: {
+                    legend: { labels: { color: '#f1f5f9' } }
+                }
+            }
+        });
+
+        const container = document.getElementById('matrixContainer');
+        const size = confMatrix.length;
+        container.style.gridTemplateColumns = `repeat(${size}, minmax(0, 1fr))`;
+        
+        let maxVal = 1;
+        confMatrix.forEach(row => row.forEach(val => { if(val > maxVal) maxVal = val; }));
+        
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                const val = confMatrix[i][j];
+                const ratio = val / maxVal;
+                const cell = document.createElement('div');
+                cell.className = "flex flex-col items-center justify-center p-1 font-mono text-xs rounded border border-gray-950 transition-colors";
+                cell.style.backgroundColor = `rgba(52, 211, 153, ${Math.max(0.04, ratio * 0.85)})`;
+                cell.style.color = ratio > 0.45 ? "#000000" : "#ffffff";
+                cell.title = `Actual: ${classNames[i]} -> Predicted: ${classNames[j]} (${val})`;
+                
+                const valLabel = document.createElement('span');
+                valLabel.className = "font-bold text-sm";
+                valLabel.innerText = val;
+                cell.appendChild(valLabel);
+                container.appendChild(cell);
+            }
+        }
+    </script>
+</body>
+</html>
